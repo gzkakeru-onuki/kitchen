@@ -53,3 +53,4 @@ npm start
 - フォント: Google Fonts（Noto Sans JP / Zen Kaku Gothic New）を `app/layout.tsx` で読み込み
 - 配色は提案資料と統一（ネイビー `#0E1B2A` × ブルー `#2563EB`）
 # kitchen
+# kitchen
