@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ChartColumn, CreditCard, MessageSquare, Search } from "lucide-react";
 
 export default function LoginPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -24,9 +25,17 @@ export default function LoginPage() {
             出店に必要な手続きを、ひとつのアプリにまとめました。
           </p>
           <ul className="mt-8 space-y-3 text-[#D5E3EE]">
-            <li>・出店場所をエリアや日程で検索・応募</li>
-            <li>・出店可否の確認、予約とオンライン決済</li>
-            <li>・運営事務局とのチャット</li>
+            {[
+              { icon: Search, text: "出店場所をエリアや日程で検索・応募" },
+              { icon: CreditCard, text: "出店可否の確認、予約とオンライン決済" },
+              { icon: MessageSquare, text: "運営事務局とのチャット・お知らせ" },
+              { icon: ChartColumn, text: "売上の記録と分析ダッシュボード" },
+            ].map(({ icon: Icon, text }) => (
+              <li key={text} className="flex items-center gap-3">
+                <Icon size={18} className="text-brandsoft shrink-0" />
+                {text}
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -72,10 +81,10 @@ export default function LoginPage() {
             )}
 
             <Link
-              href="/spots"
+              href={mode === "login" ? "/dashboard" : "/register"}
               className="block text-center bg-brand hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition"
             >
-              {mode === "login" ? "ログイン" : "登録して始める"}
+              {mode === "login" ? "ログイン" : "事業者情報の登録へ進む"}
             </Link>
 
             <p className="text-center text-xs text-muted">
