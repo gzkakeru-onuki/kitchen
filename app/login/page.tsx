@@ -90,6 +90,12 @@ export default function LoginPage() {
             <p className="text-center text-xs text-muted">
               ※ デモのため、入力せずにそのまま進めます
             </p>
+            <Link
+              href="/admin/login"
+              className="block text-center text-sm font-bold text-muted hover:text-brand"
+            >
+              運営管理者の方はこちら
+            </Link>
           </div>
         </div>
       </div>
