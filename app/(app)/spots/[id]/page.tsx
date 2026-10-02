@@ -136,7 +136,7 @@ export default function SpotDetailPage({ params }: { params: { id: string } }) {
             <ApplyButton spotName={spot.name} closed={closed} />
 
             <p className="text-xs text-muted mt-3 leading-relaxed">
-              応募後、運営事務局の審査を経て出店可否をご連絡します。承認後にオンライン決済で予約が確定します。
+              応募後、運営事務局の審査を経て出店可否をご連絡します。承認されると予約が確定し、出店料のお支払いは出店後（後払い）となります。
             </p>
             <Link
               href="/chat"

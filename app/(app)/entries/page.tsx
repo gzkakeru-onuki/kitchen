@@ -21,17 +21,19 @@ import PaymentModal from "@/components/PaymentModal";
 const tabs: { key: "all" | ApplicationStatus; label: string }[] = [
   { key: "all", label: "すべて" },
   { key: "reviewing", label: "審査中" },
-  { key: "approved", label: "承認・決済待ち" },
   { key: "reserved", label: "予約確定" },
+  { key: "unpaid", label: "お支払い待ち" },
+  { key: "paid", label: "お支払い完了" },
   { key: "rejected", label: "見送り" },
 ];
 
-const steps = ["応募", "審査", "承認", "決済", "予約確定"];
+const steps = ["応募", "審査", "予約確定", "出店", "お支払い"];
 
 function stepIndex(s: ApplicationStatus) {
   if (s === "reviewing") return 1;
-  if (s === "approved") return 3;
-  if (s === "reserved") return 4;
+  if (s === "reserved") return 3; // 予約確定済み・出店待ち
+  if (s === "unpaid") return 4; // 出店済み・お支払い待ち
+  if (s === "paid") return 5; // すべて完了
   return -1;
 }
 
@@ -108,13 +110,13 @@ export default function EntriesPage() {
                 </div>
 
                 <div className="mt-4 md:mt-0 flex flex-wrap gap-2 shrink-0">
-                  {a.status === "approved" && (
+                  {a.status === "unpaid" && (
                     <button onClick={() => setPaying(a)} className={btn.primary}>
                       <CreditCard size={18} />
-                      決済して予約を確定
+                      出店料を支払う（後払い）
                     </button>
                   )}
-                  {(a.status === "approved" || a.status === "reserved") && (
+                  {(a.status === "reserved" || a.status === "unpaid" || a.status === "paid") && (
                     <button onClick={() => setDetail(a)} className={btn.secondary}>
                       予約詳細
                     </button>
@@ -136,8 +138,8 @@ export default function EntriesPage() {
               {idx >= 0 ? (
                 <ol className="mt-5 pt-4 border-t border-line grid grid-cols-5 gap-2">
                   {steps.map((s, i) => {
-                    const done = i < idx || (i === idx && a.status === "reserved");
-                    const current = i === idx && a.status !== "reserved";
+                    const done = i < idx;
+                    const current = i === idx;
                     return (
                       <li key={s} className="flex flex-col items-center gap-1.5 text-center">
                         <span
@@ -177,7 +179,7 @@ export default function EntriesPage() {
           spotName={paying.spotName}
           fee={paying.fee}
           onClose={() => setPaying(null)}
-          onPaid={() => setStatus(paying.id, "reserved")}
+          onPaid={() => setStatus(paying.id, "paid")}
         />
       )}
 
@@ -196,7 +198,7 @@ export default function EntriesPage() {
             </dd>
             {detail.payDeadline && (
               <>
-                <dt className="text-muted">決済期限</dt>
+                <dt className="text-muted">お支払い期限（後払い）</dt>
                 <dd className="text-ink font-bold">{detail.payDeadline}</dd>
               </>
             )}
