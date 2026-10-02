@@ -29,7 +29,7 @@ import { SpotThumb } from "@/components/SpotIcon";
 
 export default function DashboardPage() {
   const reserved = applications.filter((a) => a.status === "reserved");
-  const approved = applications.filter((a) => a.status === "approved");
+  const unpaid = applications.filter((a) => a.status === "unpaid");
   const reviewing = applications.filter((a) => a.status === "reviewing");
   const thisMonth = monthlySales[monthlySales.length - 1];
   const lastMonth = monthlySales[monthlySales.length - 2];
@@ -53,7 +53,7 @@ export default function DashboardPage() {
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <Stat icon={ChartColumn} label="今月の売上" value={yen(thisMonth.sales)} sub={`前月比 ${diff > 0 ? "+" : ""}${diff}%`} accent />
         <Stat icon={CalendarCheck} label="予約確定" value={`${reserved.length} 件`} sub="今後の出店予定" />
-        <Stat icon={CreditCard} label="決済待ち" value={`${approved.length} 件`} sub="期限内にお支払いください" />
+        <Stat icon={CreditCard} label="お支払い待ち" value={`${unpaid.length} 件`} sub="出店後の後払い" />
         <Stat icon={Clock} label="審査中" value={`${reviewing.length} 件`} sub="結果はチャットで通知" />
       </div>
 
@@ -62,14 +62,14 @@ export default function DashboardPage() {
         <Card className="p-6">
           <CardTitle icon={AlertTriangle}>対応が必要なこと</CardTitle>
           <ul className="divide-y divide-line">
-            {approved.map((a) => (
+            {unpaid.map((a) => (
               <TodoRow
                 key={a.id}
                 icon={CreditCard}
-                title={`「${a.spotName}」の出店料をお支払いください`}
-                sub={`決済期限 ${a.payDeadline}　/　${yen(a.fee)}`}
+                title={`「${a.spotName}」の出店料をお支払いください（後払い）`}
+                sub={`お支払い期限 ${a.payDeadline}　/　${yen(a.fee)}`}
                 href="/payments"
-                cta="決済へ"
+                cta="支払う"
               />
             ))}
             {unreadChatCount > 0 && (

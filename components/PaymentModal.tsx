@@ -28,7 +28,7 @@ export default function PaymentModal({
         </div>
         <h3 className="font-display font-bold text-lg text-ink mb-2">お支払いが完了しました</h3>
         <p className="text-sm text-muted mb-5 leading-relaxed">
-          予約が確定しました。領収書は「決済・請求」からダウンロードできます。
+          ありがとうございました。領収書は「決済・請求」からダウンロードできます。
         </p>
         <button onClick={onClose} className={`${btn.primary} w-full`}>
           閉じる

@@ -2,8 +2,9 @@
 
 export type ApplicationStatus =
   | "reviewing" // 審査中
-  | "approved" // 承認（決済待ち）
-  | "reserved" // 予約確定（決済済み）
+  | "reserved" // 予約確定（出店前・未決済）
+  | "unpaid" // 出店済み・お支払い待ち（後払い）
+  | "paid" // お支払い完了
   | "rejected"; // 見送り
 
 export type SpotIcon = "building" | "anchor" | "shopping" | "tent" | "flower" | "factory";
@@ -131,7 +132,7 @@ export type Application = {
   appliedAt: string;
   booth?: string; // 区画番号（承認後に確定）
   loadIn?: string; // 搬入時間
-  payDeadline?: string; // 決済期限
+  payDeadline?: string; // お支払い期限（後払い）
   cancelDeadline?: string; // 無料キャンセル期限
 };
 
@@ -143,11 +144,10 @@ export const applications: Application[] = [
     area: "神奈川・横浜",
     date: "2026-10-18（土）〜19（日）",
     fee: 28000,
-    status: "approved",
+    status: "reserved",
     appliedAt: "2026-09-20",
     booth: "B-03",
     loadIn: "8:00〜9:30",
-    payDeadline: "2026-10-04",
     cancelDeadline: "2026-10-11",
   },
   {
@@ -155,13 +155,14 @@ export const applications: Application[] = [
     spotId: "shibuya-park",
     spotName: "渋谷リバーサイド広場",
     area: "東京・渋谷",
-    date: "2026-10-12（土）",
+    date: "2026-09-27（土）",
     fee: 15000,
-    status: "reserved",
-    appliedAt: "2026-09-14",
+    status: "unpaid",
+    appliedAt: "2026-09-10",
     booth: "A-02",
     loadIn: "9:00〜10:00",
-    cancelDeadline: "2026-10-05",
+    payDeadline: "2026-10-11",
+    cancelDeadline: "2026-09-20",
   },
   {
     id: "a3",
@@ -175,6 +176,18 @@ export const applications: Application[] = [
   },
   {
     id: "a4",
+    spotId: "meguro-street",
+    spotName: "中目黒 さくらストリート",
+    area: "東京・目黒",
+    date: "2026-09-06（土）",
+    fee: 18000,
+    status: "paid",
+    appliedAt: "2026-08-20",
+    booth: "C-05",
+    loadIn: "8:30〜9:30",
+  },
+  {
+    id: "a5",
     spotId: "saitama-mall",
     spotName: "大宮ショッピングモール 屋外区画",
     area: "埼玉・大宮",
@@ -190,8 +203,9 @@ export const statusMeta: Record<
   { label: string; bg: string; fg: string }
 > = {
   reviewing: { label: "審査中", bg: "#FEF3C7", fg: "#92660A" },
-  approved: { label: "承認・決済待ち", bg: "#DBEAFE", fg: "#1D4ED8" },
-  reserved: { label: "予約確定", bg: "#D1FAE5", fg: "#0F8A6B" },
+  reserved: { label: "予約確定", bg: "#DBEAFE", fg: "#1D4ED8" },
+  unpaid: { label: "お支払い待ち（後払い）", bg: "#FFEDD5", fg: "#C2410C" },
+  paid: { label: "お支払い完了", bg: "#D1FAE5", fg: "#0F8A6B" },
   rejected: { label: "今回は見送り", bg: "#F1F5F9", fg: "#64748B" },
 };
 
@@ -208,7 +222,7 @@ export const chatThreads: ChatThread[] = [
     title: "運営事務局",
     subtitle: "みなとみらい海沿いイベント区画",
     messages: [
-      { from: "ops", text: "この度はご応募ありがとうございます。出店を承認いたしました。決済のお手続きをお願いします。", time: "9/21 10:20" },
+      { from: "ops", text: "この度はご応募ありがとうございます。出店を承認し、予約が確定しました。出店料のお支払いは出店後（後払い）にご案内します。", time: "9/21 10:20" },
       { from: "me", text: "ありがとうございます！電源は2kVAとのことですが、延長ケーブルの持参は必要でしょうか？", time: "9/21 10:32" },
       { from: "ops", text: "はい、20m程度のケーブルをご持参ください。区画は入口から3番目になります。", time: "9/21 10:40" },
     ],
